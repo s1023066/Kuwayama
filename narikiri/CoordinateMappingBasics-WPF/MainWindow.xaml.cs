@@ -13,17 +13,9 @@ namespace Microsoft.Samples.Kinect.CoordinateMappingBasics
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    using Microsoft.Kinect;
     using System.Windows.Documents;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Input;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
+    using Microsoft.Kinect;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -31,7 +23,7 @@ namespace Microsoft.Samples.Kinect.CoordinateMappingBasics
     public partial class MainWindow : Window
     {
         // RGBカメラの解像度・フレームレート
-        ColorImageFormat rgbFotmat = ColorImageFormat.RgbResolution640x480Fps30;
+        private const ColorImageFormat rgbFotmat = ColorImageFormat.RgbResolution640x480Fps30;
         // Kinectセンサーからの画像情報を受け取るバッファ
         private byte[] pixelBuffer = null;
         // Kinectセンサーからの骨格情報を受け取るバッファ
@@ -42,75 +34,32 @@ namespace Microsoft.Samples.Kinect.CoordinateMappingBasics
         private BitmapImage maskImage = null;
         // ビットマップへの描写用drawVisual
         private DrawingVisual drawVisual = new DrawingVisual();
-        
-        /// <summary>
-        /// Format we will use for the depth stream
-        /// </summary>
+        // Format we will use for the depth stream
         private const DepthImageFormat DepthFormat = DepthImageFormat.Resolution320x240Fps30;
-
-        /// <summary>
-        /// Format we will use for the color stream
-        /// </summary>
-        private const ColorImageFormat ColorFormat = ColorImageFormat.RgbResolution640x480Fps30;
-
-        /// <summary>
-        /// Active Kinect sensor
-        /// </summary>
+        // Active Kinect sensor
         private KinectSensor sensor;
-
-        /// <summary>
-        /// Bitmap that will hold color information
-        /// </summary>
+        // Bitmap that will hold color information
         private WriteableBitmap colorBitmap;
-
-        /// <summary>
-        /// Bitmap that will hold opacity mask information
-        /// </summary>
+        // Bitmap that will hold opacity mask information
         private WriteableBitmap playerOpacityMaskImage = null;
-
-        /// <summary>
-        /// Intermediate storage for the depth data received from the sensor
-        /// </summary>
+        
+        // Intermediate storage for the depth data received from the sensor
         private DepthImagePixel[] depthPixels;
-
-        /// <summary>
-        /// Intermediate storage for the color data received from the camera
-        /// </summary>
-        private byte[] colorPixels;
-
-        /// <summary>
-        /// Intermediate storage for the player opacity mask
-        /// </summary>
+        // Intermediate storage for the player opacity mask
         private int[] playerPixelData;
-
-        /// <summary>
-        /// Intermediate storage for the depth to color mapping
-        /// </summary>
+        // Intermediate storage for the depth to color mapping
         private ColorImagePoint[] colorCoordinates;
-
-        /// <summary>
-        /// Inverse scaling factor between color and depth
-        /// </summary>
+        
+        // Inverse scaling factor between color and depth
         private int colorToDepthDivisor;
-
-        /// <summary>
-        /// Width of the depth image
-        /// </summary>
+        // Width of the depth image
         private int depthWidth;
-
-        /// <summary>
-        /// Height of the depth image
-        /// </summary>
+        // Height of the depth image
         private int depthHeight;
-
-        /// <summary>
-        /// Indicates opaque in an opacity mask
-        /// </summary>
+        // Indicates opaque in an opacity mask
         private int opaquePixelValue = -1;
+        // Initializes a new instance of the MainWindow class.
 
-        /// <summary>
-        /// Initializes a new instance of the MainWindow class.
-        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -165,7 +114,7 @@ namespace Microsoft.Samples.Kinect.CoordinateMappingBasics
 
                 this.depthHeight = this.sensor.DepthStream.FrameHeight;
 
-                this.sensor.ColorStream.Enable(ColorFormat);
+                this.sensor.ColorStream.Enable(rgbFotmat);
 
                 int colorWidth = this.sensor.ColorStream.FrameWidth;
                 int colorHeight = this.sensor.ColorStream.FrameHeight;
@@ -179,7 +128,7 @@ namespace Microsoft.Samples.Kinect.CoordinateMappingBasics
                 this.depthPixels = new DepthImagePixel[this.sensor.DepthStream.FramePixelDataLength];
 
                 // Allocate space to put the color pixels we'll create
-                this.colorPixels = new byte[this.sensor.ColorStream.FramePixelDataLength];
+                this.pixelBuffer = new byte[this.sensor.ColorStream.FramePixelDataLength];
 
                 this.playerPixelData = new int[this.sensor.DepthStream.FramePixelDataLength];
 
@@ -344,7 +293,7 @@ namespace Microsoft.Samples.Kinect.CoordinateMappingBasics
                 if (null != colorFrame)
                 {
                     // Copy the pixel data from the image to a temporary array
-                    colorFrame.CopyPixelDataTo(this.colorPixels);
+                    colorFrame.CopyPixelDataTo(this.pixelBuffer);
 
                     colorReceived = true;
                 }
@@ -357,7 +306,7 @@ namespace Microsoft.Samples.Kinect.CoordinateMappingBasics
                 this.sensor.CoordinateMapper.MapDepthFrameToColorFrame(
                     DepthFormat,
                     this.depthPixels,
-                    ColorFormat,
+                    rgbFotmat,
                     this.colorCoordinates);
 
                 Array.Clear(this.playerPixelData, 0, this.playerPixelData.Length);
@@ -412,7 +361,7 @@ namespace Microsoft.Samples.Kinect.CoordinateMappingBasics
                 // Write the pixel data into our bitmap
                 this.colorBitmap.WritePixels(
                     new Int32Rect(0, 0, this.colorBitmap.PixelWidth, this.colorBitmap.PixelHeight),
-                    this.colorPixels,
+                    this.pixelBuffer,
                     this.colorBitmap.PixelWidth * sizeof(int),
                     0);
 
@@ -469,7 +418,7 @@ namespace Microsoft.Samples.Kinect.CoordinateMappingBasics
             }
 
             renderBitmap.Render(dv);
-    
+
             // create a png bitmap encoder which knows how to save a .png file
             BitmapEncoder encoder = new PngBitmapEncoder();
 
@@ -497,7 +446,7 @@ namespace Microsoft.Samples.Kinect.CoordinateMappingBasics
                 this.statusBarText.Text = string.Format(CultureInfo.InvariantCulture, "{0} {1}", Properties.Resources.ScreenshotWriteFailed, path);
             }
         }
-        
+
         /// <summary>
         /// Handles the checking or unchecking of the near mode combo box
         /// </summary>

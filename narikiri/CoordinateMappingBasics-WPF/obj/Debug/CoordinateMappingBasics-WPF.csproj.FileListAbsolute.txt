@@ -5,3 +5,10 @@ C:\Users\1023066\Desktop\新しいフォルダー (4)\CoordinateMappingBasics-WP
 C:\Users\1023066\Desktop\新しいフォルダー (4)\CoordinateMappingBasics-WPF\obj\Debug\CoordinateMappingBasics-WPF.g.resources
 C:\Users\1023066\Desktop\新しいフォルダー (4)\CoordinateMappingBasics-WPF\obj\Debug\Microsoft.Samples.Kinect.CoordinateMappingBasics.Properties.Resources.resources
 C:\Users\1023066\Desktop\新しいフォルダー (4)\CoordinateMappingBasics-WPF\obj\Debug\CoordinateMappingBasics-WPF.csproj.GenerateResource.Cache
+C:\Users\1023066\Documents\GitHub\Kuwayama\narikiri\CoordinateMappingBasics-WPF\obj\Debug\MainWindow.baml
+C:\Users\1023066\Documents\GitHub\Kuwayama\narikiri\CoordinateMappingBasics-WPF\obj\Debug\MainWindow.g.cs
+C:\Users\1023066\Documents\GitHub\Kuwayama\narikiri\CoordinateMappingBasics-WPF\obj\Debug\App.g.cs
+C:\Users\1023066\Documents\GitHub\Kuwayama\narikiri\CoordinateMappingBasics-WPF\obj\Debug\CoordinateMappingBasics-WPF_MarkupCompile.cache
+C:\Users\1023066\Documents\GitHub\Kuwayama\narikiri\CoordinateMappingBasics-WPF\obj\Debug\CoordinateMappingBasics-WPF.g.resources
+C:\Users\1023066\Documents\GitHub\Kuwayama\narikiri\CoordinateMappingBasics-WPF\obj\Debug\Microsoft.Samples.Kinect.CoordinateMappingBasics.Properties.Resources.resources
+C:\Users\1023066\Documents\GitHub\Kuwayama\narikiri\CoordinateMappingBasics-WPF\obj\Debug\CoordinateMappingBasics-WPF.csproj.GenerateResource.Cache
